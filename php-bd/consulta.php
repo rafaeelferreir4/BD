@@ -32,5 +32,33 @@
         $stmt->closeCursor();
         $conect=NULL;  
     }
-    alteraCliente('7','diego', '12122121', 'cleivamaconheria');
+    function buscaCliente ($id) {
+        $conect = conectaBD();
+        $sql = "SELECT * FROM cliente WHERE codcliente=?";
+        $stmt = $conect->prepare($sql);
+        $stmt->bindParam(1,$id);
+        $stmt->execute();
+        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        $conect=NULL;
+        return $cliente;
+    }
+    function buscaXCliente ($nLimit, $offset = 0) {
+        $conect = conectaBD();
+        $sql = "SELECT * FROM cliente LIMIT ? OFFSET ?";
+        $stmt = $conect->prepare($sql);
+        $stmt->bindParam(1,$nLimit);
+        $stmt->bindParam(2,$offset);
+        $stmt->execute();
+        $vetor = [];
+        while($linha = $stmt->fetch(PDO::FETCH_ASSOC)){
+            array_push($vetor, $linha);
+        }
+        $stmt->closeCursor();
+        $conect=NULL;
+        return $vetor;
+    }
+
+    print_r(buscaXCliente(3, 2));
 ?>
+
